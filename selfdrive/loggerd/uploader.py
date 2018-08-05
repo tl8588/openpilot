@@ -220,21 +220,28 @@ class Uploader(object):
 
     cloudlog.info("checking %r with size %r", key, sz)
 
+    with open("/sys/devices/virtual/switch/tri-state-key/state") as f:
+      tristate = int(f.read())
+  
     if sz == 0:
       # can't upload files of 0 size
       os.unlink(fn) # delete the file
       success = True
     else:
-      cloudlog.info("uploading %r", fn)
-      # stat = self.killable_upload(key, fn)
-      stat = self.normal_upload(key, fn)
-      if stat is not None and stat.status_code in (200, 201):
-        cloudlog.event("upload_success", key=key, fn=fn, sz=sz)
+      if tristate == 3:
         os.unlink(fn) # delete the file
         success = True
       else:
-        cloudlog.event("upload_failed", stat=stat, exc=self.last_exc, key=key, fn=fn, sz=sz)
-        success = False
+        cloudlog.info("uploading %r", fn)
+        # stat = self.killable_upload(key, fn)
+        stat = self.normal_upload(key, fn)
+        if stat is not None and stat.status_code in (200, 201):
+          cloudlog.event("upload_success", key=key, fn=fn, sz=sz)
+          os.unlink(fn) # delete the file
+          success = True
+        else:
+          cloudlog.event("upload_failed", stat=stat, exc=self.last_exc, key=key, fn=fn, sz=sz)
+          success = False
 
     self.clean_dirs()
 

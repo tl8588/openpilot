@@ -119,15 +119,15 @@ class FCWChecker(object):
       self.counters['ttc'] = self.counters['ttc'] + 1 if ttc < 2.5 else 0
       self.counters['v_lead_max'] = self.counters['v_lead_max'] + 1 if self.v_lead_max > 2.5 else 0
       self.counters['v_ego_lead'] = self.counters['v_ego_lead'] + 1 if v_ego > v_lead else 0
-      self.counters['lead_seen'] = self.counters['lead_seen'] + 0.33
+      self.counters['lead_seen'] = self.counters['lead_seen'] + 1
       self.counters['y_lead'] = self.counters['y_lead'] + 1 if abs(y_lead) < 1.0 else 0
       self.counters['vlat_lead'] = self.counters['vlat_lead'] + 1 if abs(vlat_lead) < 0.4 else 0
-      self.counters['blinkers'] = self.counters['blinkers'] + 10.0 / (20 * 3.0) if not blinkers else 0
+      self.counters['blinkers'] = self.counters['blinkers'] + 1 if not blinkers else 0
 
       a_thr = interp(v_lead, _FCW_A_ACT_BP, _FCW_A_ACT_V)
       a_delta = min(mpc_solution_a[:15]) - min(0.0, a_ego)
 
-      fcw_allowed = all(c >= 10 for c in self.counters.values())
+      fcw_allowed = all(c >= 4 for c in self.counters.values())
       if (self.last_min_a < -3.0 or a_delta < a_thr) and fcw_allowed and self.last_fcw_time + 5.0 < cur_time:
         self.last_fcw_time = cur_time
         self.last_fcw_a = self.last_min_a
@@ -494,6 +494,8 @@ class Planner(object):
     # Send out fcw
     fcw = self.fcw and (self.fcw_enabled or LoC.long_control_state != LongCtrlState.off)
     plan_send.plan.fcw = fcw
-
+    
     self.plan.send(plan_send.to_bytes())
+
+    
     return plan_send
