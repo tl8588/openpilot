@@ -2,7 +2,7 @@
 // TODO: refactor to repeat less code
 
 // IPAS override
-const int32_t IPAS_OVERRIDE_THRESHOLD = 200;  // disallow controls when user torque exceeds this value
+const int32_t TOYOTA_IPAS_OVERRIDE_THRESHOLD = 200;  // disallow controls when user torque exceeds this value
 
 struct lookup_t {
   float x[3];
@@ -34,13 +34,6 @@ int16_t rt_angle_last = 0;             // last desired torque for real time chec
 uint32_t ts_angle_last = 0;
 
 int controls_allowed_last = 0;
-
-int to_signed(int d, int bits) {
-  if (d >= (1 << (bits - 1))) {
-    d -= (1 << bits);
-  }
-  return d;
-}
 
 // interp function that holds extreme values
 float interpolate(struct lookup_t xy, float x) {
@@ -99,7 +92,7 @@ static void toyota_ipas_rx_hook(CAN_FIFOMailBox_TypeDef *to_push) {
 
     // every RT_INTERVAL or when controls are turned on, set the new limits
     uint32_t ts_elapsed = get_ts_elapsed(ts, ts_angle_last);
-    if ((ts_elapsed > RT_INTERVAL) || (controls_allowed && !controls_allowed_last)) {
+    if ((ts_elapsed > TOYOTA_RT_INTERVAL) || (controls_allowed && !controls_allowed_last)) {
       rt_angle_last = angle_meas_new;
       ts_angle_last = ts;
     }
@@ -125,8 +118,8 @@ static void toyota_ipas_rx_hook(CAN_FIFOMailBox_TypeDef *to_push) {
   }
 
   // exit controls on high steering override
-  if (angle_control && ((torque_driver.min > IPAS_OVERRIDE_THRESHOLD) ||
-                        (torque_driver.max < -IPAS_OVERRIDE_THRESHOLD) ||
+  if (angle_control && ((torque_driver.min > TOYOTA_IPAS_OVERRIDE_THRESHOLD) ||
+                        (torque_driver.max < -TOYOTA_IPAS_OVERRIDE_THRESHOLD) ||
                         (ipas_state==5))) {
     controls_allowed = 0;
   }
@@ -187,7 +180,7 @@ const safety_hooks toyota_ipas_hooks = {
   .rx = toyota_ipas_rx_hook,
   .tx = toyota_ipas_tx_hook,
   .tx_lin = toyota_tx_lin_hook,
-  .ignition = toyota_ign_hook,
+  .ignition = default_ign_hook,
   .fwd = toyota_fwd_hook,
 };
 
