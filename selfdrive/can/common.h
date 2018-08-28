@@ -48,6 +48,7 @@ struct Signal {
   int b1, b2, bo;
   bool is_signed;
   double factor, offset;
+  bool is_little_endian;
   SignalType type;
 };
 
@@ -59,10 +60,19 @@ struct Msg {
   const Signal *sigs;
 };
 
+struct Val {
+  const char* name;
+  uint32_t address;
+  const char* def_val;
+  const Signal *sigs;
+};
+
 struct DBC {
   const char* name;
   size_t num_msgs;
   const Msg *msgs;
+  const Val *vals;
+  size_t num_vals;
 };
 
 const DBC* dbc_lookup(const std::string& dbc_name);

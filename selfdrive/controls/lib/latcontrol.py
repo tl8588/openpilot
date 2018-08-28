@@ -8,16 +8,13 @@ from common.realtime import sec_since_boot
 from selfdrive.swaglog import cloudlog
 from cereal import car
 
-# 100ms is a rule of thumb estimation of lag from image processing to actuator command
-ACTUATORS_DELAY = 0.1
-
 _DT = 0.01    # 100Hz
 _DT_MPC = 0.05  # 20Hz
 
 
-def calc_states_after_delay(states, v_ego, steer_angle, curvature_factor, steer_ratio):
-  states[0].x = v_ego * ACTUATORS_DELAY
-  states[0].psi = v_ego * curvature_factor * math.radians(steer_angle) / steer_ratio * ACTUATORS_DELAY
+def calc_states_after_delay(states, v_ego, steer_angle, curvature_factor, steer_ratio, delay):
+  states[0].x = v_ego * delay
+  states[0].psi = v_ego * curvature_factor * math.radians(steer_angle) / steer_ratio * delay
   return states
 
 
@@ -70,7 +67,7 @@ class LatControl(object):
       p_poly = libmpc_py.ffi.new("double[4]", list(PL.PP.p_poly))
 
       # account for actuation delay
-      self.cur_state = calc_states_after_delay(self.cur_state, v_ego, angle_steers, curvature_factor, VM.CP.steerRatio)
+      self.cur_state = calc_states_after_delay(self.cur_state, v_ego, angle_steers, curvature_factor, VM.CP.steerRatio, VM.CP.steerActuatorDelay)
 
       v_ego_mpc = max(v_ego, 5.0)  # avoid mpc roughness due to low speed
       self.libmpc.run_mpc(self.cur_state, self.mpc_solution,
@@ -115,7 +112,9 @@ class LatControl(object):
       steer_feedforward = self.angle_steers_des   # feedforward desired angle
       if VM.CP.steerControlType == car.CarParams.SteerControlType.torque:
         steer_feedforward *= v_ego**2  # proportional to realigning tire momentum (~ lateral accel)
-      output_steer = self.pid.update(self.angle_steers_des, angle_steers, check_saturation=(v_ego > 10), override=steer_override, feedforward=steer_feedforward, speed=v_ego)
+      deadzone = 0.0
+      output_steer = self.pid.update(self.angle_steers_des, angle_steers, check_saturation=(v_ego > 10), override=steer_override,
+                                     feedforward=steer_feedforward, speed=v_ego, deadzone=deadzone)
 
     self.sat_flag = self.pid.saturated
     return output_steer, float(self.angle_steers_des)
