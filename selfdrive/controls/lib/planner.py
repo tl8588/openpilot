@@ -128,7 +128,8 @@ class FCWChecker(object):
       a_delta = min(mpc_solution_a[:15]) - min(0.0, a_ego)
 
       fcw_allowed = all(c >= 4 for c in self.counters.values())
-      if (self.last_min_a < -3.0 or a_delta < a_thr) and fcw_allowed and self.last_fcw_time + 5.0 < cur_time:
+      #if (self.last_min_a < -3.0 or a_delta < a_thr) and fcw_allowed and self.last_fcw_time + 5.0 < cur_time:
+      if fcw_allowed and self.last_fcw_time + 5.0 < cur_time:
         self.last_fcw_time = cur_time
         self.last_fcw_a = self.last_min_a
         return True
