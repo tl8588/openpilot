@@ -78,16 +78,16 @@ def handle_fan(max_cpu_temp, bat_temp, fan_speed):
   new_speed_h = next(speed for speed, temp_h in zip(_FAN_SPEEDS, _TEMP_THRS_H) if temp_h > max_cpu_temp)
   new_speed_l = next(speed for speed, temp_l in zip(_FAN_SPEEDS, _TEMP_THRS_L) if temp_l > max_cpu_temp)
 
-  if new_speed_h > fan_speed:
+  #if new_speed_h > fan_speed:
     # update speed if using the high thresholds results in fan speed increment
-    fan_speed = new_speed_h
-  elif new_speed_l < fan_speed:
+  fan_speed = new_speed_h
+  #elif new_speed_l < fan_speed:
     # update speed if using the low thresholds results in fan speed decrement
-    fan_speed = new_speed_l
+    #fan_speed = new_speed_l
 
-  if bat_temp < _BAT_TEMP_THERSHOLD:
+  #if bat_temp < _BAT_TEMP_THERSHOLD:
     # no max fan speed unless battery is hot
-    fan_speed = min(fan_speed, _FAN_SPEEDS[-2])
+    #fan_speed = min(fan_speed, _FAN_SPEEDS[-2])
 
   set_eon_fan(fan_speed/16384)
 
@@ -162,7 +162,14 @@ def thermald_thread():
       msg.thermal.batteryStatus = f.read().strip()
     with open("/sys/class/power_supply/usb/online") as f:
       msg.thermal.usbOnline = bool(int(f.read()))
-
+    
+    if msg.thermal.batteryPercent >=80:
+      with open("/sys/class/power_supply/battery/charging_enabled", "wt") as f:
+        f.write("0")
+    elif msg.thermal.batteryPercent <=30:
+      with open("/sys/class/power_supply/battery/charging_enabled", "wt") as f:
+        f.write("1")
+        
     # TODO: add car battery voltage check
     max_cpu_temp = max(msg.thermal.cpu0, msg.thermal.cpu1,
                        msg.thermal.cpu2, msg.thermal.cpu3) / 10.0
