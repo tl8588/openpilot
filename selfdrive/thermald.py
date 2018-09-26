@@ -80,7 +80,7 @@ _TEMP_THRS_H = [50., 65., 80., 10000]
 # temp thresholds to control fan speed - low hysteresis
 _TEMP_THRS_L = [42.5, 57.5, 72.5, 10000]
 # fan speed options
-_FAN_SPEEDS = [0, 16384, 32768, 65535]
+_FAN_SPEEDS = [0, 65535, 65535, 65535]
 # max fan speed only allowed if battery is hot
 _BAT_TEMP_THERSHOLD = 45.
 
@@ -88,16 +88,7 @@ def handle_fan(max_cpu_temp, bat_temp, fan_speed):
   new_speed_h = next(speed for speed, temp_h in zip(_FAN_SPEEDS, _TEMP_THRS_H) if temp_h > max_cpu_temp)
   new_speed_l = next(speed for speed, temp_l in zip(_FAN_SPEEDS, _TEMP_THRS_L) if temp_l > max_cpu_temp)
 
-  if new_speed_h > fan_speed:
-    # update speed if using the high thresholds results in fan speed increment
-    fan_speed = new_speed_h
-  elif new_speed_l < fan_speed:
-    # update speed if using the low thresholds results in fan speed decrement
-    fan_speed = new_speed_l
-
-  if bat_temp < _BAT_TEMP_THERSHOLD:
-    # no max fan speed unless battery is hot
-    fan_speed = min(fan_speed, _FAN_SPEEDS[-2])
+  fan_speed = new_speed_h
 
   set_eon_fan(fan_speed/16384)
 
@@ -180,7 +171,14 @@ def thermald_thread():
       msg.thermal.batteryVoltage = int(f.read())
     with open("/sys/class/power_supply/usb/online") as f:
       msg.thermal.usbOnline = bool(int(f.read()))
-
+    
+    if msg.thermal.batteryPercent >=80:
+      with open("/sys/class/power_supply/battery/charging_enabled", "wt") as f:
+        f.write("0")
+    elif msg.thermal.batteryPercent <=40:
+      with open("/sys/class/power_supply/battery/charging_enabled", "wt") as f:
+        f.write("1")
+        
     current_filter.update(msg.thermal.batteryCurrent / 1e6)
     msg.thermal.chargerDisabled = current_filter.x > 1.0   # if current is ? 1A out, then charger might be off
 
