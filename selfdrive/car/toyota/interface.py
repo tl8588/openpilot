@@ -182,10 +182,10 @@ class CarInterface(object):
     #ret.enableCamera = not check_ecu_msgs(fingerprint, ECU.CAM)
     if not check_ecu_msgs(fingerprint, ECU.CAM):
       ret.enableCamera = 1
-      ret.StockCameraLive = 0
+      ret.stockCameraLive = 0
     else:
       ret.enableCamera = 1
-      ret.StockCameraLive = 1
+      ret.stockCameraLive = 1
     ret.enableDsu = not check_ecu_msgs(fingerprint, ECU.DSU)
     ret.enableApgs = False #not check_ecu_msgs(fingerprint, ECU.APGS)
     cloudlog.warn("ECU Camera Simulated: %r", ret.enableCamera)
