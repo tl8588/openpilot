@@ -285,7 +285,8 @@ struct CarParams {
   enableCamera @26 :Bool;
   enableDsu @27 :Bool; # driving support unit
   enableApgs @28 :Bool; # advanced parking guidance system
-
+  StockCameraLive @50 :Bool;
+  
   minEnableSpeed @17 :Float32;
   minSteerSpeed @49 :Float32;
   safetyModel @18 :Int16;
