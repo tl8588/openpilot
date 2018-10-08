@@ -115,9 +115,9 @@ class CarController(object):
     if enable_apg: self.fake_ecus.add(ECU.APGS)
 
     if enable_camera and not enable_dsu:
-      self.disDsuCan = 1
+      self.disDsuCan = True
     else:
-      self.disDsuCan = 0
+      self.disDsuCan = False
       
     self.packer = CANPacker(dbc_name)
 
@@ -211,7 +211,7 @@ class CarController(object):
       can_sends.append(create_ipas_steer_command(self.packer, 0, 0, True))
 
     # accel cmd comes from DSU, but we can spam can to cancel the system even if we are using lat only control
-    if self.disDsuCan == 0:
+    if not self.disDsuCan:
       if (frame % 3 == 0 and ECU.DSU in self.fake_ecus) or (pcm_cancel_cmd and ECU.CAM in self.fake_ecus):
         if ECU.DSU in self.fake_ecus:
           can_sends.append(create_accel_command(self.packer, apply_accel, pcm_cancel_cmd, self.standstill_req))
@@ -240,7 +240,7 @@ class CarController(object):
       can_sends.append(create_fcw_command(self.packer, fcw))
 
     #*** static msgs ***
-    if self.disDsuCan == 0:
+    if not self.disDsuCan:
       for (addr, ecu, cars, bus, fr_step, vl) in STATIC_MSGS:
         if frame % fr_step == 0 and ecu in self.fake_ecus and self.car_fingerprint in cars:
           # special cases
