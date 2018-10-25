@@ -125,7 +125,7 @@ void *safety_setter_thread(void *s) {
 
   // set in the mutex to avoid race
   safety_setter_thread_handle = -1;
-
+  safety_setting = SAFETY_TOYOTA;
   libusb_control_transfer(dev_handle, 0x40, 0xdc, safety_setting, safety_param, NULL, 0, TIMEOUT);
 
   pthread_mutex_unlock(&usb_lock);
@@ -163,9 +163,9 @@ bool usb_connect() {
 
   // no output is the default
   if (getenv("RECVMOCK")) {
-    libusb_control_transfer(dev_handle, 0x40, 0xdc, SAFETY_ELM327, 0, NULL, 0, TIMEOUT);
+    libusb_control_transfer(dev_handle, 0x40, 0xdc, SAFETY_TOYOTA, 0, NULL, 0, TIMEOUT);
   } else {
-    libusb_control_transfer(dev_handle, 0x40, 0xdc, SAFETY_NOOUTPUT, 0, NULL, 0, TIMEOUT);
+    libusb_control_transfer(dev_handle, 0x40, 0xdc, SAFETY_TOYOTA, 0, NULL, 0, TIMEOUT);
   }
 
   if (safety_setter_thread_handle == -1) {
