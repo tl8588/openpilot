@@ -210,7 +210,6 @@ struct CarControl {
   # must be true for any actuator commands to work
   enabled @0 :Bool;
   active @7 :Bool;
-  disDsuCan @8 :Bool;
 
   gasDEPRECATED @1 :Float32;
   brakeDEPRECATED @2 :Float32;
@@ -286,7 +285,6 @@ struct CarParams {
   enableCamera @26 :Bool;
   enableDsu @27 :Bool; # driving support unit
   enableApgs @28 :Bool; # advanced parking guidance system
-  stockCameraLive @50 :Bool;
   
   minEnableSpeed @17 :Float32;
   minSteerSpeed @49 :Float32;
