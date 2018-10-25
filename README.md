@@ -1,3 +1,5 @@
+SET GIRAFFE to 0101 and use comma power
+=======
 [![](https://i.imgur.com/UetIFyH.jpg)](#)
 
 Welcome to openpilot
