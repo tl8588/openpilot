@@ -284,13 +284,13 @@ int usb_cb_control_msg(USB_Setup_TypeDef *setup, uint8_t *resp, int hardwired) {
       if (hardwired || setup->b.wValue.w == SAFETY_NOOUTPUT || setup->b.wValue.w == SAFETY_ELM327) {
         safety_set_mode(setup->b.wValue.w, (int16_t)setup->b.wIndex.w);
         switch (setup->b.wValue.w) {
-          case SAFETY_NOOUTPUT:
+          /*case SAFETY_NOOUTPUT:
             can_silent = ALL_CAN_SILENT;
             break;
           case SAFETY_ELM327:
             can_silent = ALL_CAN_BUT_MAIN_SILENT;
             can_autobaud_enabled[0] = false;
-            break;
+            break;*/
           default:
             can_silent = ALL_CAN_LIVE;
             can_autobaud_enabled[0] = false;
