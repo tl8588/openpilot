@@ -113,11 +113,6 @@ class CarController(object):
     if enable_camera: self.fake_ecus.add(ECU.CAM)
     if enable_dsu: self.fake_ecus.add(ECU.DSU)
     if enable_apg: self.fake_ecus.add(ECU.APGS)
-
-    if enable_camera and not enable_dsu:
-      self.disDsuCan = True
-    else:
-      self.disDsuCan = False
       
     self.packer = CANPacker(dbc_name)
 
@@ -211,16 +206,15 @@ class CarController(object):
       can_sends.append(create_ipas_steer_command(self.packer, 0, 0, True))
 
     # accel cmd comes from DSU, but we can spam can to cancel the system even if we are using lat only control
-    if not self.disDsuCan:
-      if (frame % 3 == 0 and ECU.DSU in self.fake_ecus) or (pcm_cancel_cmd and ECU.CAM in self.fake_ecus):
-        if ECU.DSU in self.fake_ecus:
-          can_sends.append(create_accel_command(self.packer, apply_accel, pcm_cancel_cmd, self.standstill_req))
-        else:
-          can_sends.append(create_accel_command(self.packer, 0, pcm_cancel_cmd, False))
+    if (frame % 3 == 0 and ECU.DSU in self.fake_ecus) or (pcm_cancel_cmd and ECU.CAM in self.fake_ecus):
+      if ECU.DSU in self.fake_ecus:
+        can_sends.append(create_accel_command(self.packer, apply_accel, pcm_cancel_cmd, self.standstill_req))
+      else:
+        can_sends.append(create_accel_command(self.packer, 0, pcm_cancel_cmd, False))
 
-      if frame % 10 == 0 and ECU.CAM in self.fake_ecus and self.car_fingerprint not in NO_DSU_CAR:
-        for addr in TARGET_IDS:
-          can_sends.append(create_video_target(frame/10, addr))
+    #if frame % 10 == 0 and ECU.CAM in self.fake_ecus and self.car_fingerprint not in NO_DSU_CAR:
+    #  for addr in TARGET_IDS:
+    #    can_sends.append(create_video_target(frame/10, addr))
 
     # ui mesg is at 100Hz but we send asap if:
     # - there is something to display
@@ -254,8 +248,8 @@ class CarController(object):
               # 0x48a has a 8 preceding the counter
               cnt += 1 << 7
             vl += chr(cnt)
-
-          can_sends.append(make_can_msg(addr, vl, bus, False))
+          if ecu != ECU.CAM
+            can_sends.append(make_can_msg(addr, vl, bus, False))
 
 
     sendcan.send(can_list_to_can_capnp(can_sends, msgtype='sendcan').to_bytes())
