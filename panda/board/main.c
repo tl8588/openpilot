@@ -559,8 +559,9 @@ int main() {
   usb_init();
 
   // default to silent mode to prevent issues with Ford
-  safety_set_mode(SAFETY_NOOUTPUT, 0);
-  can_silent = ALL_CAN_SILENT;
+  //safety_set_mode(SAFETY_NOOUTPUT, 0);
+  safety_set_mode(SAFETY_TOYOTA, 0);
+  can_silent = ALL_CAN_LIVE;//ALL_CAN_SILENT;
   can_init_all();
 
   adc_init();
