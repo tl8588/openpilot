@@ -11,7 +11,7 @@ static void nooutput_init(int16_t param) {
 }
 
 static int nooutput_tx_hook(CAN_FIFOMailBox_TypeDef *to_send) {
-  return false;
+  return true;//false;
 }
 
 static int nooutput_tx_lin_hook(int lin_num, uint8_t *data, int len) {
@@ -51,6 +51,11 @@ static int alloutput_tx_lin_hook(int lin_num, uint8_t *data, int len) {
 }
 
 static int alloutput_fwd_hook(int bus_num, CAN_FIFOMailBox_TypeDef *to_fwd) {
+  if ((bus_num == 0 || bus_num == 2) && !toyota_giraffe_switch_1) {
+    int addr = to_fwd->RIR>>21;
+    bool is_lkas_msg = (addr == 0x2E4 || addr == 0x412) && bus_num == 2;
+    return is_lkas_msg? -1 : (uint8_t)(~bus_num & 0x2);
+  }
   return -1;
 }
 
