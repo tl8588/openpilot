@@ -247,7 +247,7 @@ class CarController(object):
             # 0x48a has a 8 preceding the counter
             cnt += 1 << 7
           vl += chr(cnt)
-        if ecu != ECU.CAM
+        if ecu != ECU.CAM:
           can_sends.append(make_can_msg(addr, vl, bus, False))
 
 
