@@ -33,7 +33,7 @@ class CarInterface(object):
     # sending if read only is False
     if sendcan is not None:
       self.sendcan = sendcan
-      self.CC = CarController(self.cp.dbc_name, CP.carFingerprint, CP.enableCamera, CP.enableDsu, CP.enableApgs)
+      self.CC = CarController(self.cp.dbc_name, CP.carFingerprint, CP.enableCamera, CP.enableDsu, CP.enableApgs, CP.enablePandsu)
 
   @staticmethod
   def compute_gb(accel, speed):
@@ -182,6 +182,10 @@ class CarInterface(object):
     ret.enableCamera = not check_ecu_msgs(fingerprint, ECU.CAM)
     ret.enableDsu = not check_ecu_msgs(fingerprint, ECU.DSU)
     ret.enableApgs = False #not check_ecu_msgs(fingerprint, ECU.APGS)
+    ret.enablePandsu = check_ecu_msgs(fingerprint, ECU.PANDSU)
+    if ret.enablePandsu:
+      ret.enableDsu=False
+    
     cloudlog.warn("ECU Camera Simulated: %r", ret.enableCamera)
     cloudlog.warn("ECU DSU Simulated: %r", ret.enableDsu)
     cloudlog.warn("ECU APGS Simulated: %r", ret.enableApgs)

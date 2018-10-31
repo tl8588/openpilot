@@ -27,7 +27,7 @@ static int nooutput_tx_lin_hook(int lin_num, uint8_t *data, int len) {
 static int nooutput_fwd_hook(int bus_num, CAN_FIFOMailBox_TypeDef *to_fwd) {
   if ((bus_num == 0 || bus_num == 2)) {
     int addr = to_fwd->RIR>>21;
-    bool is_acc_msg = (eon_alive) && (addr == 0x343) && (bus_num == 2);
+    bool is_acc_msg = (eon_alive) && (addr == 0x343) && (bus_num == 2);  //if eon alive block acc msg
     return is_acc_msg? -1 : (uint8_t)(~bus_num & 0x2);
   }
   return -1;

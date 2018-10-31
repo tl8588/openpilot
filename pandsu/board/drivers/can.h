@@ -429,7 +429,9 @@ void can_rx(uint8_t can_number) {
         to_send.RDHR = to_push.RDHR;
         can_send(&to_send, bus_fwd_num);
       }
-      else {    // if eon_alive send 5BBh to can0, let eon know pandsu is alive
+      
+      int addr = to_push->RIR>>21;
+      if (addr == 0x343 && bus_number==2){    // send 5BBh to can0, let eon know pandsu is alive
         //int addr = to_fwd->RIR>>21;
         to_push.RIR &= 0x001FFFFF;
         to_push.RIR |= (0x000005BB<<21);
