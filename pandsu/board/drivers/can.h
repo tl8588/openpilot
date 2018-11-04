@@ -430,13 +430,12 @@ void can_rx(uint8_t can_number) {
         can_send(&to_send, bus_fwd_num);
       }
       
-      int addr = to_push->RIR>>21;
-      if (addr == 0x343 && bus_number==2){    // send 5BBh to can0, let eon know pandsu is alive
-        //int addr = to_fwd->RIR>>21;
-        to_push.RIR &= 0x001FFFFF;
-        to_push.RIR |= (0x000005BB<<21);
+      int addr = to_push.RIR>>21;
+      if ((can_rx_cnt%100)==1){    // send 5BBh to can0, let eon know pandsu is alive
         CAN_FIFOMailBox_TypeDef to_send;
         to_send.RIR = to_push.RIR | 1; // TXRQ
+        to_send.RIR &= 0x001FFFFF;
+        to_send.RIR |= (0x000005BB<<21);
         to_send.RDTR = to_push.RDTR;
         to_send.RDLR = to_push.RDLR;
         to_send.RDHR = to_push.RDHR;
