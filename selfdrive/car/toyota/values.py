@@ -72,7 +72,7 @@ ECU_FINGERPRINT = {
   ECU.CAM: 0x2e4,   # steer torque cmd
   ECU.DSU: 0x343,   # accel cmd
   ECU.APGS: 0x835,  # angle cmd
-  ECU.PANDASU: 0x5BB, # dsu panda alive
+  ECU.PANDSU: 0x5BB, # dsu panda alive
 }
 
 
