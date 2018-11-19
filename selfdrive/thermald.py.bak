@@ -175,7 +175,7 @@ def thermald_thread():
     if msg.thermal.batteryPercent >=80:
       with open("/sys/class/power_supply/battery/charging_enabled", "wt") as f:
         f.write("0")
-    elif msg.thermal.batteryPercent <=40:
+    elif msg.thermal.batteryPercent <=30:
       with open("/sys/class/power_supply/battery/charging_enabled", "wt") as f:
         f.write("1")
         
