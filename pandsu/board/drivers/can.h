@@ -430,7 +430,8 @@ void can_rx(uint8_t can_number) {
         can_send(&to_send, bus_fwd_num);
       }
       
-      if (can_rx_cnt%100==1){    // send 5BBh to can0, let eon know pandsu is alive
+
+      if ((can_rx_cnt%100)==1){    // send 5BBh to can0, let eon know pandsu is alive
         CAN_FIFOMailBox_TypeDef to_send;
         to_send.RIR = to_push.RIR | 1; // TXRQ
         to_send.RIR &= 0x001FFFFF;
