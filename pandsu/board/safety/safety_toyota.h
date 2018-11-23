@@ -82,7 +82,7 @@ static int toyota_tx_hook(CAN_FIFOMailBox_TypeDef *to_send) {
 
 static void toyota_init(int16_t param) {
   controls_allowed = 0;
-  eon_alive = 0;
+  //eon_alive = 0;
   toyota_actuation_limits = 1;
   toyota_giraffe_switch_1 = 0;
   toyota_dbc_eps_torque_factor = param;
@@ -92,7 +92,7 @@ static int toyota_fwd_hook(int bus_num, CAN_FIFOMailBox_TypeDef *to_fwd) {
 
   if ((bus_num == 0 || bus_num == 2)) {
     int addr = to_fwd->RIR>>21;
-    bool is_acc_msg = (eon_alive) && (addr == 0x343) && (bus_num == 2);
+    bool is_acc_msg = ((eon_alive==1)&&(addr == 0x343) && (bus_num == 2));
     return is_acc_msg? -1 : (uint8_t)(~bus_num & 0x2);
   }
   return -1;

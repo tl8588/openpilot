@@ -71,7 +71,7 @@ finger = {}
 st = None
 st_passive = sec_since_boot()  # only relevant when passive
 can_seen = False
-i = 100
+i = 1000
 while i:
   i = i - 1
   for a in messaging.drain_sock(logcan):
