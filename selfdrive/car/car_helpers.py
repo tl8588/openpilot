@@ -70,7 +70,7 @@ def fingerprint(logcan, timeout):
     # broadcast immediately
     if len(candidate_cars) == 1 and st is not None:
       # TODO: better way to decide to wait more if Toyota
-      time_fingerprint = 3.0 if ("TOYOTA" in candidate_cars[0] or "LEXUS" in candidate_cars[0]) else 2.5
+      time_fingerprint = 1.0 if ("TOYOTA" in candidate_cars[0] or "LEXUS" in candidate_cars[0]) else 0.1
       if (ts-st) > time_fingerprint:
         break
 
@@ -87,9 +87,11 @@ def fingerprint(logcan, timeout):
 
 def get_car(logcan, sendcan=None, passive=True):
   # TODO: timeout only useful for replays so controlsd can start before unlogger
-  timeout = 4. if passive else None
-  candidate, fingerprints = fingerprint(logcan, timeout)
-
+  timeout = 2. if passive else None
+  #candidate, fingerprints = fingerprint(logcan, timeout)
+  candidate = 'TOYOTA PRIUS 2017'
+  fingerprints = {643L: 7, 810L: 2, 870L: 7, 836L: 8, 1568L: 8, 36L: 8, 37L: 8, 166L: 8, 295L: 8, 296L: 8, 170L: 8, 560L: 7, 562L: 6, 180L: 8, 1077L: 8, 951L: 8, 1467L: 8, 829L: 2, 800L: 8, 452L: 8, 581L: 5, 713L: 8, 971L: 7, 845L: 5, 974L: 8, 975L: 5, 466L: 8, 467L: 8, 863L: 8, 608L: 8, 610L: 8, 550L: 8, 742L: 8, 743L: 8, 1132L: 8, 1005L: 2, 552L: 4, 1020L: 8, 426L: 6}
+  
   if candidate is None:
     cloudlog.warning("car doesn't match any fingerprints: %r", fingerprints)
     if passive:
