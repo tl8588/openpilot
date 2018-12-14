@@ -192,6 +192,8 @@ class CarInterface(object):
     if ret.enablePandsu:
       ret.enableDsu=False
     
+    ret.openpilotLongitudinalControl = ret.enableCamera and ret.enableDsu
+
     cloudlog.warn("ECU Camera Simulated: %r", ret.enableCamera)
     cloudlog.warn("ECU DSU Simulated: %r", ret.enableDsu)
     cloudlog.warn("ECU APGS Simulated: %r", ret.enableApgs)
