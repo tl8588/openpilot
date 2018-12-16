@@ -223,6 +223,7 @@ class Uploader(object):
     #with open("/sys/devices/virtual/switch/tri-state-key/state") as f:
     #  tristate = int(f.read())
     tristate=0
+    params = Params()
     if params.get("IsMetric") == "0":
       tristate=3
   
