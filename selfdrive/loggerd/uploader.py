@@ -220,9 +220,13 @@ class Uploader(object):
 
     cloudlog.info("checking %r with size %r", key, sz)
 
-    with open("/sys/devices/virtual/switch/tri-state-key/state") as f:
-      tristate = int(f.read())
-  
+    #with open("/sys/devices/virtual/switch/tri-state-key/state") as f:
+    #  tristate = int(f.read())
+    tristate=0
+    params = Params()
+    if params.get("RecordFront") == "0":
+      tristate=3
+      
     if sz == 0:
       # can't upload files of 0 size
       os.unlink(fn) # delete the file
