@@ -224,7 +224,7 @@ class Uploader(object):
     #  tristate = int(f.read())
     tristate=0
     params = Params()
-    if params.get("IsMetric") == "0":
+    if params.get("RecordFront") == "0":
       tristate=3
   
     if sz == 0:
