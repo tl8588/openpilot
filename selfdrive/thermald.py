@@ -195,12 +195,12 @@ def thermald_thread():
     with open("/sys/class/power_supply/usb/online") as f:
       msg.thermal.usbOnline = bool(int(f.read()))
     
-    if msg.thermal.batteryPercent >=80:
-      with open("/sys/class/power_supply/battery/charging_enabled", "wt") as f:
-        f.write("0")
-    elif msg.thermal.batteryPercent <=40:
-      with open("/sys/class/power_supply/battery/charging_enabled", "wt") as f:
-        f.write("1")
+    #if msg.thermal.batteryPercent >=80:
+    #  with open("/sys/class/power_supply/battery/charging_enabled", "wt") as f:
+    #    f.write("0")
+    #elif msg.thermal.batteryPercent <=40:
+    #  with open("/sys/class/power_supply/battery/charging_enabled", "wt") as f:
+    #    f.write("1")
         
     current_filter.update(msg.thermal.batteryCurrent / 1e6)
 
