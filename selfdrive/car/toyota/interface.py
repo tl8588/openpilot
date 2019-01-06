@@ -242,6 +242,7 @@ class CarInterface(object):
     # gas pedal
     ret.gas = self.CS.car_gas
     ret.gasPressed = self.CS.pedal_gas > 0
+    #ret.gasPressed = False
 
     # brake pedal
     ret.brake = self.CS.user_brake

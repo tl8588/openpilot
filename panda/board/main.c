@@ -560,7 +560,7 @@ int main() {
 
   // default to silent mode to prevent issues with Ford
   //safety_set_mode(SAFETY_NOOUTPUT, 0);
-  safety_set_mode(SAFETY_TOYOTA, 0);
+  safety_set_mode(SAFETY_TOYOTA, 66);
   can_silent = ALL_CAN_LIVE;//ALL_CAN_SILENT;
   can_init_all();
 

@@ -102,7 +102,7 @@ managed_processes = {
   "sensord": ("selfdrive/sensord", ["./sensord"]),
   "gpsd": ("selfdrive/sensord", ["./gpsd"]),
   "orbd": ("selfdrive/orbd", ["./orbd_wrapper.sh"]),
-  "updated": "selfdrive.updated",
+#  "updated": "selfdrive.updated",
 }
 android_packages = ("ai.comma.plus.offroad", "ai.comma.plus.frame")
 
@@ -124,7 +124,7 @@ persistent_processes = [
   'uploader',
   'ui',
   'gpsd',
-  'updated',
+#  'updated',
 ]
 
 car_started_processes = [
@@ -499,7 +499,7 @@ def main():
       cwd=os.path.join(BASEDIR, "selfdrive", "ui", "spinner"),
       close_fds=True)
   try:
-    manager_update()
+    #manager_update()
     manager_init()
     manager_prepare()
   finally:

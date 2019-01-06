@@ -1,5 +1,7 @@
 int toyota_giraffe_switch_1 = 0;          // is giraffe switch 1 high?
 int toyota_camera_forwarded = 0;          // should we forward the camera bus?
+int stop_forward_steer = 0;
+uint32_t eon_tmr = 0;
 
 // global torque limit
 const int TOYOTA_MAX_TORQUE = 1500;       // max torque cmd allowed ever
@@ -64,7 +66,7 @@ static void toyota_rx_hook(CAN_FIFOMailBox_TypeDef *to_push) {
   if (bus == 2) {
     toyota_camera_forwarded = 1;
   }
-
+  
   // 0x2E4 is lkas cmd. If it is on bus 0, then giraffe switch 1 is high
   if ((to_push->RIR>>21) == 0x2E4 && (bus == 0)) {
     toyota_giraffe_switch_1 = 1;
@@ -91,6 +93,16 @@ static int toyota_tx_hook(CAN_FIFOMailBox_TypeDef *to_send) {
       } else if (!controls_allowed && (desired_accel != 0)) {
         return 0;
       }
+    }
+    if ((to_send->RIR>>21) == 0x5aa)
+    {
+       stop_forward_steer = 1;
+       eon_tmr=TIM2->CNT;
+    }
+    uint32_t eon_elapsed = get_ts_elapsed(TIM2->CNT, eon_tmr);
+    if (eon_elapsed>1200000) //if no eon signal more than 1.2s
+    {   
+       stop_forward_steer = 0;
     }
 
     // STEER: safety check on bytes 2-3
@@ -162,7 +174,10 @@ static int toyota_fwd_hook(int bus_num, CAN_FIFOMailBox_TypeDef *to_fwd) {
   if ((bus_num == 0 || bus_num == 2) && toyota_camera_forwarded && !toyota_giraffe_switch_1) {
 
     int addr = to_fwd->RIR>>21;
-    bool is_lkas_msg = (addr == 0x2E4 || addr == 0x412) && bus_num == 2;
+    //bool is_lkas_msg = (addr == 0x2E4 || addr == 0x412) && bus_num == 2;
+    bool is_lkas_msg = (addr == 0x2E4 && bus_num == 2);
+    if (stop_forward_steer == 0)
+      is_lkas_msg=0;
     return is_lkas_msg? -1 : (uint8_t)(~bus_num & 0x2);
   }
   return -1;

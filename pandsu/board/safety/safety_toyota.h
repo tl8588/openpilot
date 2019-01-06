@@ -1,5 +1,6 @@
 int toyota_no_dsu_car = 0;                // ch-r and camry don't have the DSU
 int toyota_giraffe_switch_1 = 0;          // is giraffe switch 1 high?
+uint32_t eon_tmr = 0;
 //int eon_alive = 0;
 // global torque limit
 const int TOYOTA_MAX_TORQUE = 1500;       // max torque cmd allowed ever
@@ -68,13 +69,16 @@ static void toyota_rx_hook(CAN_FIFOMailBox_TypeDef *to_push) {
   // 0x5AA send by eon.
   if ((to_push->RIR>>21) == 0x5AA && (bus == 0)) {
     eon_alive = 1;
+    eon_tmr=TIM2->CNT;
   }
-
+  uint32_t ts_elapsed = get_ts_elapsed(TIM2->CNT, eon_tmr);
+  if (ts_elapsed > 1200000) // >1.2s
+  {
+     eon_alive = 0;
+  }
 }
 
 static int toyota_tx_hook(CAN_FIFOMailBox_TypeDef *to_send) {
-
-
 
   // 1 allows the message through
   return true;
