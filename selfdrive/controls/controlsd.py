@@ -298,6 +298,7 @@ def state_control(plan, CS, CP, state, events, v_cruise_kph, v_cruise_kph_last, 
 
 
 def setEONAudio(audible_alert):
+  AudibleAlert = car.CarControl.HUDControl.AudibleAlert
   if audible_alert==AudibleAlert.chimeEngage:
     retstr="chimeEngage"
   elif audible_alert==AudibleAlert.chimeDisengage:
