@@ -297,7 +297,7 @@ def state_control(plan, CS, CP, state, events, v_cruise_kph, v_cruise_kph_last, 
   return actuators, v_cruise_kph, driver_status, angle_offset
 
 
-def setEONAudio(audible_alert)
+def setEONAudio(audible_alert):
   if audible_alert==AudibleAlert.chimeEngage:
     retstr="chimeEngage"
   elif audible_alert==AudibleAlert.chimeDisengage:
@@ -312,7 +312,7 @@ def setEONAudio(audible_alert)
     retstr="chimeWarningRepeat"
   elif audible_alert==AudibleAlert.chimePrompt:
     retstr="chimePrompt"
-  else
+  else:
     retstr=""
   return retstr
   
