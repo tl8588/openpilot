@@ -297,6 +297,26 @@ def state_control(plan, CS, CP, state, events, v_cruise_kph, v_cruise_kph_last, 
   return actuators, v_cruise_kph, driver_status, angle_offset
 
 
+def setEONAudio(audible_alert)
+  if audible_alert==AudibleAlert.chimeEngage:
+    retstr="chimeEngage"
+  elif audible_alert==AudibleAlert.chimeDisengage:
+    retstr="chimeDisengage"
+  elif audible_alert==AudibleAlert.chimeError:
+    retstr="chimeError"
+  elif audible_alert==AudibleAlert.chimeWarning1:
+    retstr="chimeWarning1"
+  elif audible_alert==AudibleAlert.chimeWarning2:
+    retstr="chimeWarning2"
+  elif audible_alert==AudibleAlert.chimeWarningRepeat:
+    retstr="chimeWarningRepeat"
+  elif audible_alert==AudibleAlert.chimePrompt:
+    retstr="chimePrompt"
+  else
+    retstr=""
+  return retstr
+  
+  
 def data_send(perception_state, plan, plan_ts, CS, CI, CP, VM, state, events, actuators, v_cruise_kph, rk, carstate,
               carcontrol, live100, livempc, AM, driver_status,
               LaC, LoC, angle_offset, passive):
@@ -336,7 +356,8 @@ def data_send(perception_state, plan, plan_ts, CS, CI, CP, VM, state, events, ac
     "alertStatus": AM.alert_status,
     "alertBlinkingRate": AM.alert_rate,
     "alertType": AM.alert_type,
-    "alertSound": "",  # no EON sounds yet
+    #"alertSound": "",  # no EON sounds yet
+    "alertSound": setEONAudio(AM.audible_alert),
     "awarenessStatus": max(driver_status.awareness, 0.0) if isEnabled(state) else 0.0,
     "driverMonitoringOn": bool(driver_status.monitor_on),
     "canMonoTimes": list(CS.canMonoTimes),
