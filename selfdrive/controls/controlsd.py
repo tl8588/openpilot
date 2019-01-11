@@ -357,8 +357,8 @@ def data_send(perception_state, plan, plan_ts, CS, CI, CP, VM, state, events, ac
     "alertStatus": AM.alert_status,
     "alertBlinkingRate": AM.alert_rate,
     "alertType": AM.alert_type,
-    "alertSound": "",  # no EON sounds yet
-    #"alertSound": setEONAudio(AM.audible_alert),
+    #"alertSound": "",  # no EON sounds yet
+    "alertSound": setEONAudio(AM.audible_alert),
     "awarenessStatus": max(driver_status.awareness, 0.0) if isEnabled(state) else 0.0,
     "driverMonitoringOn": bool(driver_status.monitor_on),
     "canMonoTimes": list(CS.canMonoTimes),
