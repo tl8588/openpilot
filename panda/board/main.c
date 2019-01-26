@@ -590,7 +590,7 @@ int main() {
     uint64_t marker = 0;
     #define CURRENT_THRESHOLD 0xF00
     #define CLICKS 8
-  // Enough clicks to ensure that enumeration happened. Should be longer than bootup time of the device connected to EON
+    // Enough clicks to ensure that enumeration happened. Should be longer than bootup time of the device connected to EON
     #define CLICKS_BOOTUP 30
   #endif
 
@@ -618,7 +618,8 @@ int main() {
           }
           break;
         case USB_POWER_CDP:
-          // been CLICKS_BOOTUP  clicks since we switched to CDP
+          // been CLICKS_BOOTUP clicks since we switched to CDP
+
           if ((cnt-marker) >= CLICKS_BOOTUP ) {
             // measure current draw, if positive and no enumeration, switch to DCP
             if (!is_enumerated && current < CURRENT_THRESHOLD) {
