@@ -70,7 +70,7 @@ def create_accel_command(packer, accel, pcm_cancel, standstill_req, lead):
     "ACCEL_CMD": accel,
     "SET_ME_X01": 1,
     "DISTANCE": 0,
-    "MINI_CAR": lead,
+    "MINI_CAR": 1,#lead,  # set 1, can control from 0 without lead car
     "SET_ME_X3": 3,
     "SET_ME_1": 1,
     "RELEASE_STANDSTILL": not standstill_req,

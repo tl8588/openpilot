@@ -2547,7 +2547,8 @@ int main() {
       s->volume_timeout--;
     } else {
       int volume = min(13, 11 + s->scene.v_ego / 15);  // up one notch every 15 m/s, starting at 11
-      set_volume(s, volume);
+      //set_volume(s, volume);
+      set_volume(s, 60);
     }
 
     if (s->speed_lim_off_timeout > 0) {
