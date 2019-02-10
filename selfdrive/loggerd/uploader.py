@@ -268,13 +268,13 @@ def revome_old_video():
   dirpth="/sdcard/videos"
   lst = os.listdir("/sdcard/videos")
 
-  if (len(lst)>5):
-    delnum=len(lst)-5
+  if (len(lst)>30):
+    delnum=len(lst)-30
     for fn in listdir_by_creation_date(dirpth):
       if fn.startswith("saved")==False:
-        path = os.path.join(dirpth, logname)
+        path = os.path.join(dirpth, fn)
         os.remove(path)
-        delnum--
+        delnum=delnum-1
       if delnum==0:
         return
         
