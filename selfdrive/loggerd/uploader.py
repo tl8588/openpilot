@@ -264,6 +264,22 @@ class Uploader(object):
 
 
 
+def revome_old_video():
+  dirpth="/sdcard/videos"
+  lst = os.listdir("/sdcard/videos")
+
+  if (len(lst)>5):
+    delnum=len(lst)-5
+    for fn in listdir_by_creation_date(dirpth):
+      if fn.startswith("saved")==False:
+        path = os.path.join(dirpth, logname)
+        os.remove(path)
+        delnum--
+      if delnum==0:
+        return
+        
+    
+
 def uploader_fn(exit_event):
   cloudlog.info("uploader_fn")
 
@@ -278,6 +294,7 @@ def uploader_fn(exit_event):
 
   backoff = 0.1
   while True:
+    revome_old_video()
     allow_cellular = (params.get("IsUploadVideoOverCellularEnabled") != "0")
     on_hotspot = is_on_hotspot()
     on_wifi = is_on_wifi()
@@ -310,6 +327,7 @@ def uploader_fn(exit_event):
 
 def main(gctx=None):
   uploader_fn(threading.Event())
+
 
 if __name__ == "__main__":
   main()
