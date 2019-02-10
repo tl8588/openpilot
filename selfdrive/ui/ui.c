@@ -2504,7 +2504,7 @@ int main() {
 
   float smooth_brightness = BRIGHTNESS_B;
 
-  set_volume(s, 0);
+  set_volume(s, 100);
 
   while (!do_exit) {
     bool should_swap = false;
@@ -2546,6 +2546,7 @@ int main() {
       should_swap = true;
     }
 
+    /*
     if (s->volume_timeout > 0) {
       s->volume_timeout--;
     } else {
@@ -2553,7 +2554,7 @@ int main() {
       //set_volume(s, volume);
       set_volume(s, 100);
     }
-
+    */
     if (s->speed_lim_off_timeout > 0) {
       s->speed_lim_off_timeout--;
     } else {
