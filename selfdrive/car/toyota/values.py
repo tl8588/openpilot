@@ -19,6 +19,7 @@ class ECU:
   DSU = 1 # driving support unit
   APGS = 2 # advanced parking guidance system
   PANDSU = 3 #DSU panda
+  EON = 4
 
 
 # addr: (ecu, cars, bus, 1/freq*100, vl)
@@ -65,7 +66,7 @@ STATIC_MSGS = [
   (0x497, ECU.APGS, (CAR.PRIUS), 0, 100, '\x00\x00\x00\x00\x00\x00\x00\x00'),
   (0x4CC, ECU.APGS, (CAR.PRIUS), 0, 100, '\x0D\x00\x00\x00\x00\x00\x00\x00'),
 
-  (0x5AA, ECU.PANDSU, (CAR.PRIUS, CAR.RAV4H, CAR.LEXUS_RXH, CAR.RAV4), 0, 100, '\x0c\x00\x00\x00\x00\x00\x00\x00'),
+  (0x5AA, ECU.EON, (CAR.PRIUS, CAR.RAV4H, CAR.LEXUS_RXH, CAR.RAV4), 0, 100, '\x0c\x00\x00\x00\x00\x00\x00\x00'),
 ]
 
 ECU_FINGERPRINT = {
