@@ -121,7 +121,8 @@ class CarController(object):
     if enable_dsu: self.fake_ecus.add(ECU.DSU)
     if enable_apg: self.fake_ecus.add(ECU.APGS)
     if enable_pandsu: self.fake_ecus.add(ECU.PANDSU)
-      
+    self.fake_ecus.add(ECU.EON)
+    
     self.packer = CANPacker(dbc_name)
 
   def update(self, sendcan, enabled, CS, frame, actuators,
